@@ -21,7 +21,10 @@ public class Rainbow6_Signal : ModuleRules
 			"Slate",
 			"Niagara",
 			"NavigationSystem",
-			"AIModule"
+			"AIModule",
+			"Http",
+			"Json",
+			"JsonUtilities"
 		});
 
 		PrivateDependencyModuleNames.AddRange(new string[] { });
