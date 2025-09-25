@@ -8,6 +8,7 @@
 #include "Public/SignalData.h"
 
 FString UDataManager::URL = TEXT("");
+FOnResponse UDataManager::OnResponseDelegate;
 
 void UDataManager::OnRequestComplete(FHttpRequestPtr Request, FHttpResponsePtr Response, bool Successful)
 {
@@ -29,9 +30,9 @@ void UDataManager::OnRequestComplete(FHttpRequestPtr Request, FHttpResponsePtr R
 	// JSON 파싱
 	TSharedPtr<FJsonObject> JsonObject;
 	TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(ResponseString);
+	FSignalJudgeData Data = FSignalJudgeData();
 	if (FJsonSerializer::Deserialize(Reader, JsonObject) && JsonObject.IsValid())
 	{
-		FSignalJudgeData Data;
 		Data.Scenario = JsonObject->GetStringField(TEXT("Scenario"));
 		Data.IsAnswer = JsonObject->GetBoolField(TEXT("IsAnswer"));
 		Data.Score = JsonObject->GetNumberField(TEXT("Score"));
@@ -39,6 +40,9 @@ void UDataManager::OnRequestComplete(FHttpRequestPtr Request, FHttpResponsePtr R
 		PRINTLOG(TEXT("Scenario: %s | IsAnswer: %s | Throw: %f"),
 			*Data.Scenario, (Data.IsAnswer ? TEXT("True") : TEXT("False")), Data.Score);
 	}
+
+	//Response 처리
+	OnResponseDelegate.ExecuteIfBound(Data);
 }
 
 void UDataManager::SendScenarioStart(const FSignalSendData& Data)
