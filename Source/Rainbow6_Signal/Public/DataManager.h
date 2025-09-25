@@ -25,5 +25,7 @@ public:
 	static FOnResponse OnResponseDelegate;
 
 	UFUNCTION(BlueprintCallable, Category="Signal|REST")
+	static FString EncodeFrameToBase64(UTextureRenderTarget2D* RenderTarget);
+	UFUNCTION(BlueprintCallable, Category="Signal|REST")
 	static void SendScenarioStart(const FSignalSendData& Data);
 };

@@ -3,7 +3,9 @@
 
 #include "Public/DataManager.h"
 #include "HttpModule.h"
+#include "ImageUtils.h"
 #include "Rainbow6_Signal.h"
+#include "Engine/TextureRenderTarget2D.h"
 #include "Interfaces/IHttpResponse.h"
 #include "Public/SignalData.h"
 
@@ -45,12 +47,31 @@ void UDataManager::OnRequestComplete(FHttpRequestPtr Request, FHttpResponsePtr R
 	OnResponseDelegate.ExecuteIfBound(Data);
 }
 
+FString UDataManager::EncodeFrameToBase64(UTextureRenderTarget2D* RenderTarget)
+{
+	TArray<FColor> Pixels;
+	FRenderTarget* RenderTargetResource = RenderTarget->GameThread_GetRenderTargetResource();
+	RenderTargetResource->ReadPixels(Pixels);
+
+	TArray<uint8> CompressedBytes;
+	FImageUtils::CompressImageArray(RenderTarget->SizeX, RenderTarget->SizeY, Pixels, CompressedBytes);
+
+	return FBase64::Encode(CompressedBytes);
+}
+
 void UDataManager::SendScenarioStart(const FSignalSendData& Data)
 {
 	// Json 변환
 	TSharedPtr<FJsonObject> JsonObject = MakeShareable(new FJsonObject);
 	JsonObject->SetStringField(TEXT("Scenario"), Data.Scenario);
-	JsonObject->SetNumberField(TEXT("ScenarioNum"), Data.ScenarioNum);	
+	JsonObject->SetNumberField(TEXT("Fps"), Data.Fps);
+	TArray<TSharedPtr<FJsonValue>> FrameArray;
+	for (const FString& FrameBase64 : Data.Frames)
+	{
+		FrameArray.Add(MakeShareable(new FJsonValueString(FrameBase64)));
+		
+	}
+	JsonObject->SetArrayField(TEXT("Frames"), FrameArray);
 
 	FString OutputString;
 	TSharedRef<TJsonWriter<>> Writer = TJsonWriterFactory<>::Create(&OutputString);

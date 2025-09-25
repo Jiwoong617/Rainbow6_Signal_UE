@@ -10,12 +10,12 @@ struct FSignalSendData
 	GENERATED_BODY()
 
 public:
-	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FString Scenario; // 현재 시나리오(손동작) 이름
-	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int32 ScenarioNum; // 현재 시나리오 번호 (혹시 모르니)
+	int32 Fps; // fps 수
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TArray<FString> Frames; // Base64 이미지 정보
 };
 
 //서버측에서 언리얼로 보낼 정보
