@@ -77,12 +77,47 @@
 
 FString UDataManager::EncodeFrameToBase64(UTextureRenderTarget2D* RenderTarget)
 {
+	// 픽셀 읽기
 	TArray<FColor> Pixels;
 	FRenderTarget* RenderTargetResource = RenderTarget->GameThread_GetRenderTargetResource();
 	RenderTargetResource->ReadPixels(Pixels);
 
-	TArray<uint8> CompressedBytes;
-	FImageUtils::CompressImageArray(RenderTarget->SizeX, RenderTarget->SizeY, Pixels, CompressedBytes);
+	// PNG 압축
+	TArray<uint8> CompressedPNG;
+	FImageUtils::CompressImageArray(
+		RenderTarget->SizeX,
+		RenderTarget->SizeY,
+		Pixels,
+		CompressedPNG);
 
-	return FBase64::Encode(CompressedBytes);
+	return FBase64::Encode(CompressedPNG);
+}
+
+void UDataManager::SaveFile(UTextureRenderTarget2D* RenderTarget, FString FileName)
+{
+	// 픽셀 읽기
+	TArray<FColor> Pixels;
+	FRenderTarget* RenderTargetResource = RenderTarget->GameThread_GetRenderTargetResource();
+	RenderTargetResource->ReadPixels(Pixels);
+
+	// PNG 압축
+	TArray<uint8> CompressedPNG;
+	FImageUtils::CompressImageArray(
+		RenderTarget->SizeX,
+		RenderTarget->SizeY,
+		Pixels,
+		CompressedPNG
+	);
+
+	// 저장 경로
+	FString SavePath = FPaths::ProjectSavedDir() / FileName;
+
+	if (FFileHelper::SaveArrayToFile(CompressedPNG, *SavePath))
+	{
+		UE_LOG(LogTemp, Log, TEXT("Webcam shot saved: %s"), *SavePath);
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("Failed to save webcam shot!"));
+	}
 }

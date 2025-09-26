@@ -23,9 +23,11 @@ private:
 	//static void OnRequestComplete(FHttpRequestPtr Request, FHttpResponsePtr Response, bool Successful);
 public:
 	//static FOnResponse OnResponseDelegate;
-
-	UFUNCTION(BlueprintCallable, Category="Signal|REST")
-	static FString EncodeFrameToBase64(UTextureRenderTarget2D* RenderTarget);
 	//UFUNCTION(BlueprintCallable, Category="Signal|REST")
 	//static void SendScenarioStart(const FSignalSendData& Data);
+
+	UFUNCTION(BlueprintCallable, Category="DATA")
+	static FString EncodeFrameToBase64(UTextureRenderTarget2D* RenderTarget);
+	UFUNCTION(BlueprintCallable, Category="DATA")
+	static void SaveFile(UTextureRenderTarget2D* RenderTarget, FString FileName = TEXT("WebcamShot.png"));
 };
