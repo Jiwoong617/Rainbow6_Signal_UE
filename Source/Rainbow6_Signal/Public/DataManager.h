@@ -10,7 +10,7 @@
 struct FSignalSendData;
 struct FSignalJudgeData;
 
-DECLARE_DYNAMIC_DELEGATE_OneParam(FOnResponse, const FSignalJudgeData&, Data);
+//DECLARE_DYNAMIC_DELEGATE_OneParam(FOnResponse, const FSignalJudgeData&, Data);
 
 UCLASS()
 class RAINBOW6_SIGNAL_API UDataManager : public UBlueprintFunctionLibrary
@@ -20,12 +20,12 @@ class RAINBOW6_SIGNAL_API UDataManager : public UBlueprintFunctionLibrary
 private:
 	static FString URL;
 	
-	static void OnRequestComplete(FHttpRequestPtr Request, FHttpResponsePtr Response, bool Successful);
+	//static void OnRequestComplete(FHttpRequestPtr Request, FHttpResponsePtr Response, bool Successful);
 public:
-	static FOnResponse OnResponseDelegate;
+	//static FOnResponse OnResponseDelegate;
 
 	UFUNCTION(BlueprintCallable, Category="Signal|REST")
 	static FString EncodeFrameToBase64(UTextureRenderTarget2D* RenderTarget);
-	UFUNCTION(BlueprintCallable, Category="Signal|REST")
-	static void SendScenarioStart(const FSignalSendData& Data);
+	//UFUNCTION(BlueprintCallable, Category="Signal|REST")
+	//static void SendScenarioStart(const FSignalSendData& Data);
 };

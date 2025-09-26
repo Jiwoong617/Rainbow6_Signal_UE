@@ -3,6 +3,22 @@
 #include "CoreMinimal.h"
 #include "SignalData.generated.h"
 
+namespace NetworkConfig
+{
+	const FString BaseUrl = TEXT("http://172.16.20.103");
+	const int32 Port = 8000;
+
+	static FString GetURL()
+	{
+		return BaseUrl;
+	}
+	
+	static FString GetFullUrl(const FString& Endpoint)
+	{
+		return FString::Printf(TEXT("%s:%d%s"), *BaseUrl, Port, *Endpoint);
+	}
+}
+
 //언리얼측에서 서버로 보낼 정보
 USTRUCT(BlueprintType)
 struct FSignalSendData

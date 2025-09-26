@@ -24,7 +24,8 @@ public class Rainbow6_Signal : ModuleRules
 			"AIModule",
 			"Http",
 			"Json",
-			"JsonUtilities"
+			"JsonUtilities",
+			"WebSockets",
 		});
 
 		PrivateDependencyModuleNames.AddRange(new string[] { });
