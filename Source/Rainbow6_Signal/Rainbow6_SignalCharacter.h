@@ -22,65 +22,39 @@ UCLASS(abstract)
 class ARainbow6_SignalCharacter : public ACharacter
 {
 	GENERATED_BODY()
-
-	/** Pawn mesh: first person view (arms; seen only by self) */
+	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components", meta = (AllowPrivateAccess = "true"))
 	USkeletalMeshComponent* FirstPersonMesh;
 
-	/** First person camera */
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components", meta = (AllowPrivateAccess = "true"))
 	UCameraComponent* FirstPersonCameraComponent;
 
 protected:
 
-	/** Jump Input Action */
-	UPROPERTY(EditAnywhere, Category ="Input")
-	UInputAction* JumpAction;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spline Movement")
+	class AActor* SplineToFollow;
 
-	/** Move Input Action */
-	UPROPERTY(EditAnywhere, Category ="Input")
-	UInputAction* MoveAction;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spline Movement")
+	float MovementSpeed = 500.0f;
 
-	/** Look Input Action */
-	UPROPERTY(EditAnywhere, Category ="Input")
-	class UInputAction* LookAction;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spline Movement", meta = (ClampMin = "0.0"))
+	float LocationSharpness = 10.0f;
 
-	/** Mouse Look Input Action */
-	UPROPERTY(EditAnywhere, Category ="Input")
-	class UInputAction* MouseLookAction;
-	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spline Movement", meta = (ClampMin = "0.0"))
+	float RotationSharpness = 10.0f;
+
+	float DistanceAlongSpline = 0.0f;
+
+	UPROPERTY()
+	class USplineComponent* TargetSplineComponent;
+
+
 public:
 	ARainbow6_SignalCharacter();
 
-protected:
+	virtual void BeginPlay() override;
 
-	/** Called from Input Actions for movement input */
-	void MoveInput(const FInputActionValue& Value);
+	virtual void Tick(float DeltaTime) override;
 
-	/** Called from Input Actions for looking input */
-	void LookInput(const FInputActionValue& Value);
-
-	/** Handles aim inputs from either controls or UI interfaces */
-	UFUNCTION(BlueprintCallable, Category="Input")
-	virtual void DoAim(float Yaw, float Pitch);
-
-	/** Handles move inputs from either controls or UI interfaces */
-	UFUNCTION(BlueprintCallable, Category="Input")
-	virtual void DoMove(float Right, float Forward);
-
-	/** Handles jump start inputs from either controls or UI interfaces */
-	UFUNCTION(BlueprintCallable, Category="Input")
-	virtual void DoJumpStart();
-
-	/** Handles jump end inputs from either controls or UI interfaces */
-	UFUNCTION(BlueprintCallable, Category="Input")
-	virtual void DoJumpEnd();
-
-protected:
-
-	/** Set up input action bindings */
-	virtual void SetupPlayerInputComponent(UInputComponent* InputComponent) override;
-	
 
 public:
 
