@@ -7,7 +7,9 @@
 #include "NetworkManager.generated.h"
 
 class IWebSocket;
-struct FSignalSendData;
+struct FSignalFrameData;
+struct FSignalStartData;
+struct FSignalEndData;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnWebSocketConnected);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnWebSocketMessageReceived, const FSignalJudgeData&, Message);
@@ -19,6 +21,9 @@ class RAINBOW6_SIGNAL_API UNetworkManager : public UWorldSubsystem
 {
 	GENERATED_BODY()
 private:
+	UPROPERTY()
+	FString SessionId;
+	
 	TSharedPtr<IWebSocket> WebSocket;
 
 	void OnConnected_Native();
@@ -30,8 +35,17 @@ public:
 	UFUNCTION(BlueprintCallable, Category="Signal|WebSocket")
 	void Connect(const FString& Url);
 
+	//시나리오 시작 시 넘기기
 	UFUNCTION(BlueprintCallable, Category="Signal|WebSocket")
-	void SendScenarioStart(const FSignalSendData& Data);
+	void SendScenarioStart(const FSignalStartData& Data);
+
+	//시나리오 시작, 프레임(사진 정보) 넘기기
+	UFUNCTION(BlueprintCallable, Category="Signal|WebSocket")
+	void SendFrame(const FSignalFrameData& Data);
+
+	//녹화가 끝났다면 넘기기
+	UFUNCTION(BlueprintCallable, Category="Signal|WebSocket")
+	void SendScenarioEnd(const FSignalEndData& Data);
 
 	UFUNCTION(BlueprintCallable, Category="Signal|WebSocket")
 	void Close();
