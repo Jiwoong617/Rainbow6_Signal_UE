@@ -8,113 +8,116 @@
 #include "EnhancedInputComponent.h"
 #include "InputActionValue.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Components/SplineComponent.h"
 #include "Rainbow6_Signal.h"
+#include "VectorTypes.h"
 
 ARainbow6_SignalCharacter::ARainbow6_SignalCharacter()
 {
-	// Set size for collision capsule
-	GetCapsuleComponent()->InitCapsuleSize(55.f, 96.0f);
-	
-	// Create the first person mesh that will be viewed only by this character's owner
-	FirstPersonMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("First Person Mesh"));
+// Set size for collision capsule
+GetCapsuleComponent()->InitCapsuleSize(55.f, 96.0f);
 
-	FirstPersonMesh->SetupAttachment(GetMesh());
-	FirstPersonMesh->SetOnlyOwnerSee(true);
-	FirstPersonMesh->FirstPersonPrimitiveType = EFirstPersonPrimitiveType::FirstPerson;
-	FirstPersonMesh->SetCollisionProfileName(FName("NoCollision"));
 
-	// Create the Camera Component	
-	FirstPersonCameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("First Person Camera"));
-	FirstPersonCameraComponent->SetupAttachment(FirstPersonMesh, FName("head"));
-	FirstPersonCameraComponent->SetRelativeLocationAndRotation(FVector(-2.8f, 5.89f, 0.0f), FRotator(0.0f, 90.0f, -90.0f));
-	FirstPersonCameraComponent->bUsePawnControlRotation = true;
-	FirstPersonCameraComponent->bEnableFirstPersonFieldOfView = true;
-	FirstPersonCameraComponent->bEnableFirstPersonScale = true;
-	FirstPersonCameraComponent->FirstPersonFieldOfView = 70.0f;
-	FirstPersonCameraComponent->FirstPersonScale = 0.6f;
+FirstPersonMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("First Person Mesh"));
 
-	// configure the character comps
-	GetMesh()->SetOwnerNoSee(true);
-	GetMesh()->FirstPersonPrimitiveType = EFirstPersonPrimitiveType::WorldSpaceRepresentation;
+FirstPersonMesh->SetupAttachment(GetMesh());
+FirstPersonMesh->SetOnlyOwnerSee(true);
+FirstPersonMesh->FirstPersonPrimitiveType = EFirstPersonPrimitiveType::FirstPerson;
+FirstPersonMesh->SetCollisionProfileName(FName("NoCollision"));
 
-	GetCapsuleComponent()->SetCapsuleSize(34.0f, 96.0f);
 
-	// Configure character movement
-	GetCharacterMovement()->BrakingDecelerationFalling = 1500.0f;
-	GetCharacterMovement()->AirControl = 0.5f;
+FirstPersonCameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("First Person Camera"));
+FirstPersonCameraComponent->SetupAttachment(GetMesh(), FName("head"));
+FirstPersonCameraComponent->SetRelativeLocationAndRotation(FVector(-2.8f, 5.89f, 0.0f), FRotator(0.0f, 90.0f, -90.0f));
+FirstPersonCameraComponent->bUsePawnControlRotation = true;
+FirstPersonCameraComponent->bEnableFirstPersonFieldOfView = true;
+FirstPersonCameraComponent->bEnableFirstPersonScale = true;
+FirstPersonCameraComponent->FirstPersonFieldOfView = 70.0f;
+FirstPersonCameraComponent->FirstPersonScale = 0.6f;
+
+
+GetMesh()->SetOwnerNoSee(true);
+GetMesh()->FirstPersonPrimitiveType = EFirstPersonPrimitiveType::WorldSpaceRepresentation;
+
+GetCapsuleComponent()->SetCapsuleSize(34.0f, 96.0f);
+
+
+GetCharacterMovement()->BrakingDecelerationFalling = 1500.0f;
+GetCharacterMovement()->AirControl = 0.5f;
+	GetCharacterMovement()->bOrientRotationToMovement = false;
+	GetCharacterMovement()->bUseControllerDesiredRotation = false;
+	GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_None);}
+
+// BeginPlay 함수 추가
+void ARainbow6_SignalCharacter::BeginPlay()
+{
+	Super::BeginPlay();
+
+	// SplineToFollow가 유효한지 확인하고 SplineComponent를 미리 찾아둠
+		if (SplineToFollow)
+		{
+			TargetSplineComponent = SplineToFollow->FindComponentByClass<USplineComponent>();
+
+			// 아래 디버그 로그 추가
+			if (TargetSplineComponent)
+			{
+				// 성공 로그 (초록색)
+				UE_LOG(LogTemp, Warning, TEXT("Success: Spline Component was found on the assigned Actor."));
+			}
+			else
+			{
+				// 실패 로그 (빨간색)
+				UE_LOG(LogTemp, Error, TEXT("ERROR: Spline Component was NOT found on the assigned Actor! Check the BP_Spline Blueprint."));
+			}
+		}
+		else
+		{
+			// SplineToFollow 자체가 할당 안된 경우 (빨간색)
+			UE_LOG(LogTemp, Error, TEXT("ERROR: The 'SplineToFollow' variable is not assigned in the editor."));
+		}
 }
 
-void ARainbow6_SignalCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
-{	
-	// Set up action bindings
-	if (UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent))
+void ARainbow6_SignalCharacter::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+
+	if (TargetSplineComponent)
 	{
-		// Jumping
-		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Started, this, &ARainbow6_SignalCharacter::DoJumpStart);
-		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &ARainbow6_SignalCharacter::DoJumpEnd);
+		DistanceAlongSpline += MovementSpeed * DeltaTime;
 
-		// Moving
-		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &ARainbow6_SignalCharacter::MoveInput);
+		
+		FVector SplineLocation = TargetSplineComponent->GetLocationAtDistanceAlongSpline(DistanceAlongSpline, ESplineCoordinateSpace::World);
+		FVector SplineTangent = TargetSplineComponent->GetDirectionAtDistanceAlongSpline(DistanceAlongSpline, ESplineCoordinateSpace::World);
 
-		// Looking/Aiming
-		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &ARainbow6_SignalCharacter::LookInput);
-		EnhancedInputComponent->BindAction(MouseLookAction, ETriggerEvent::Triggered, this, &ARainbow6_SignalCharacter::LookInput);
+		
+		FVector TargetLocation = SplineLocation;
+		FRotator TargetRotation;
+
+		
+		FHitResult HitResult;
+		FVector TraceStart = SplineLocation + FVector(0, 0, 200.0f); 
+		FVector TraceEnd = SplineLocation - FVector(0, 0, 2000.0f); 
+		FCollisionQueryParams CollisionParams;
+		CollisionParams.AddIgnoredActor(this);
+
+		FVector GroundNormal = FVector::UpVector;
+		if (GetWorld()->LineTraceSingleByChannel(HitResult, TraceStart, TraceEnd, ECC_WorldStatic, CollisionParams)) 
+		{
+			if (HitResult.bBlockingHit)
+			{
+				
+				TargetLocation.Z = HitResult.ImpactPoint.Z + GetCapsuleComponent()->GetScaledCapsuleHalfHeight();
+				GroundNormal = HitResult.ImpactNormal;
+			}
+		}
+
+
+		TargetRotation = FRotationMatrix::MakeFromXZ(SplineTangent, GroundNormal).Rotator();
+
+
+		const FVector SmoothedLocation = FMath::VInterpTo(GetActorLocation(), TargetLocation, DeltaTime, LocationSharpness);
+		const FRotator SmoothedRotation = FMath::RInterpTo(GetActorRotation(), TargetRotation, DeltaTime, RotationSharpness);
+
+		SetActorLocationAndRotation(SmoothedLocation, SmoothedRotation);
 	}
-	else
-	{
-		UE_LOG(Rainbow6_Signal, Error, TEXT("'%s' Failed to find an Enhanced Input Component! This template is built to use the Enhanced Input system. If you intend to use the legacy system, then you will need to update this C++ file."), *GetNameSafe(this));
-	}
-}
-
-
-void ARainbow6_SignalCharacter::MoveInput(const FInputActionValue& Value)
-{
-	// get the Vector2D move axis
-	FVector2D MovementVector = Value.Get<FVector2D>();
-
-	// pass the axis values to the move input
-	DoMove(MovementVector.X, MovementVector.Y);
-
-}
-
-void ARainbow6_SignalCharacter::LookInput(const FInputActionValue& Value)
-{
-	// get the Vector2D look axis
-	FVector2D LookAxisVector = Value.Get<FVector2D>();
-
-	// pass the axis values to the aim input
-	DoAim(LookAxisVector.X, LookAxisVector.Y);
-
-}
-
-void ARainbow6_SignalCharacter::DoAim(float Yaw, float Pitch)
-{
-	if (GetController())
-	{
-		// pass the rotation inputs
-		AddControllerYawInput(Yaw);
-		AddControllerPitchInput(Pitch);
-	}
-}
-
-void ARainbow6_SignalCharacter::DoMove(float Right, float Forward)
-{
-	if (GetController())
-	{
-		// pass the move inputs
-		AddMovementInput(GetActorRightVector(), Right);
-		AddMovementInput(GetActorForwardVector(), Forward);
-	}
-}
-
-void ARainbow6_SignalCharacter::DoJumpStart()
-{
-	// pass Jump to the character
-	Jump();
-}
-
-void ARainbow6_SignalCharacter::DoJumpEnd()
-{
-	// pass StopJumping to the character
-	StopJumping();
 }
