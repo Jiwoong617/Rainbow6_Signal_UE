@@ -6,6 +6,7 @@
 #include "IWebSocket.h"
 #include "NetworkManager.generated.h"
 
+class IWebSocket;
 struct FSignalSendData;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnWebSocketConnected);
@@ -14,7 +15,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnWebSocketConnectionError, const F
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnWebSocketClosed, int32, StatusCode, const FString&, Reason, bool, bWasClean);
 
 UCLASS()
-class RAINBOW6_SIGNAL_API UNetworkManager : public UObject
+class RAINBOW6_SIGNAL_API UNetworkManager : public UWorldSubsystem
 {
 	GENERATED_BODY()
 private:
