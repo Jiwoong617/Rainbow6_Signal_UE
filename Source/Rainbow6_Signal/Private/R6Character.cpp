@@ -64,6 +64,7 @@ void AR6Character::OnResponseReceived(const FSignalJudgeData& Message)
 	PRINTLOG(TEXT("Scenario: %s, Score: %f"), *Message.Scenario, Message.Score);
 
 	SignalJudgeData.Add(Message);
+	OnResponseDelegate.Broadcast();
 }
 
 void AR6Character::SendFrame(int32 FrameId, FString Frame)

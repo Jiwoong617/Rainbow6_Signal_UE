@@ -12,6 +12,8 @@ struct FSignalJudgeData;
 class UWebcamUI;
 class UNetworkManager;
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnResponse);
+
 UCLASS()
 class RAINBOW6_SIGNAL_API AR6Character : public ACharacter
 {
@@ -56,6 +58,9 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite);
 	TArray<FSignalJudgeData> SignalJudgeData;
+
+	UPROPERTY(BlueprintAssignable);
+	FOnResponse OnResponseDelegate;
 	
 private:
 	//이게 서버에서 데이터 받았을 때 들어오는 콜백되는 함수
