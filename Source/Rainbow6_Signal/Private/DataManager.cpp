@@ -89,6 +89,17 @@ FString UDataManager::EncodeFrameToBase64(UTextureRenderTarget2D* RenderTarget)
 		RenderTarget->SizeY,
 		Pixels,
 		CompressedPNG);
+	
+	//디버깅용 인코딩 저장
+	// FString SavePath = FPaths::ProjectSavedDir() / TEXT("Encode.txt");	
+	// if (FFileHelper::SaveStringToFile(FBase64::Encode(CompressedPNG), *SavePath))
+	// {
+	// 	UE_LOG(LogTemp, Log, TEXT("Webcam shot saved: %s"), *SavePath);
+	// }
+	// else
+	// {
+	// 	UE_LOG(LogTemp, Error, TEXT("Failed to save webcam shot!"));
+	// }
 
 	return FBase64::Encode(CompressedPNG);
 }
