@@ -65,5 +65,18 @@ public:
 	/** Returns first person camera component **/
 	UCameraComponent* GetFirstPersonCameraComponent() const { return FirstPersonCameraComponent; }
 
+public:
+	// 지정된 시간 동안 캐릭터의 움직임을 멈춥니다.
+	void StopMovementForDuration(float Duration);
+
+private:
+	// 캐릭터의 움직임을 재개합니다.
+	void ResumeMovement();
+
+	// 움직임 멈춤 타이머를 위한 핸들
+	FTimerHandle MovementStopTimerHandle;
+
+	// 원래 이동 속도를 저장하기 위한 변수
+	float OriginalMovementSpeed;
 };
 

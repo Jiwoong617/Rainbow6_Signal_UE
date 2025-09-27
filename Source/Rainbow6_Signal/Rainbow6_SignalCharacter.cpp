@@ -11,6 +11,7 @@
 #include "Components/SplineComponent.h"
 #include "Rainbow6_Signal.h"
 #include "VectorTypes.h"
+#include "TimerManager.h"
 
 ARainbow6_SignalCharacter::ARainbow6_SignalCharacter()
 {
@@ -120,4 +121,25 @@ void ARainbow6_SignalCharacter::Tick(float DeltaTime)
 
 		SetActorLocationAndRotation(SmoothedLocation, SmoothedRotation);
 	}
+}
+
+void ARainbow6_SignalCharacter::StopMovementForDuration(float Duration)
+{
+    // 이미 멈춤 상태가 아닐 때만 실행
+    if (MovementSpeed > 0.0f)
+    {
+        OriginalMovementSpeed = MovementSpeed;
+        MovementSpeed = 0.0f;
+
+        // 타이머 설정
+        GetWorld()->GetTimerManager().SetTimer(MovementStopTimerHandle, this, &ARainbow6_SignalCharacter::ResumeMovement, Duration, false);
+    }
+}
+
+void ARainbow6_SignalCharacter::ResumeMovement()
+{
+    MovementSpeed = OriginalMovementSpeed;
+
+    // 타이머 클리어
+    GetWorld()->GetTimerManager().ClearTimer(MovementStopTimerHandle);
 }
