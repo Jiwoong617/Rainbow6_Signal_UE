@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "R6Character.h"
 #include "GameFramework/Character.h"
 #include "Logging/LogMacros.h"
 #include "Rainbow6_SignalCharacter.generated.h"
@@ -18,8 +19,8 @@ DECLARE_LOG_CATEGORY_EXTERN(LogTemplateCharacter, Log, All);
 /**
  *  A basic first person character
  */
-UCLASS(abstract)
-class ARainbow6_SignalCharacter : public ACharacter
+UCLASS()
+class ARainbow6_SignalCharacter : public AR6Character
 {
 	GENERATED_BODY()
 	
