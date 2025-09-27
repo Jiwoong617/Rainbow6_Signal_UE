@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
-
+	
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "R6Character.generated.h"
@@ -34,7 +34,7 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-private:
+protected:
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<UWebcamUI> WBP_WebcamUI;
 	UPROPERTY(EditAnywhere)
@@ -62,7 +62,7 @@ public:
 	UPROPERTY(BlueprintAssignable);
 	FOnResponse OnResponseDelegate;
 	
-private:
+protected:
 	//이게 서버에서 데이터 받았을 때 들어오는 콜백되는 함수
 	UFUNCTION()
 	void OnResponseReceived(const FSignalJudgeData& Message);
