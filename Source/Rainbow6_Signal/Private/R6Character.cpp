@@ -71,9 +71,9 @@ void AR6Character::OnResponseReceived(const FSignalJudgeData& Message)
 	if (Message.Scenario == TEXT("Line_Abreast_Formation"))
 		ResultUI->SetBombScore(Message.Score * 100);
 	if (Message.Scenario == TEXT("Freeze"))
-		ResultUI->SetBombScore(Message.Score * 100);
+		ResultUI->SetHeliScore(Message.Score * 100);
 	if (Message.Scenario == TEXT("Crouch_or_Go_Prone"))
-		ResultUI->SetBombScore(Message.Score * 100);
+		ResultUI->SetTankScore(Message.Score * 100);
 	if (Message.Scenario == TEXT("Gas"))
 		ResultUI->SetGasScore(Message.Score * 100);
 	
@@ -139,6 +139,8 @@ void AR6Character::StartScenario(FString Signal, int32 AllFrame)
 
 void AR6Character::OnGameEnd()
 {
+	NetManager->Close();
+	
 	WebcamUI->RemoveFromParent();
 	ResultUI->Show();
 }

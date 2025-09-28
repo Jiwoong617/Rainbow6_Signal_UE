@@ -17,28 +17,28 @@ void UTrainingResultUI::Show()
 
 void UTrainingResultUI::SetBombScore(const float Score)
 {
-	TotalScore += Score;
+	TotalScore += (Score / 4.f);
 	TEXT_BombScore->SetText(FText::FromString(FString::SanitizeFloat(Score)));
 	UpdateTotalScoreAndGrade();
 }
 
 void UTrainingResultUI::SetHeliScore(const float Score)
 {
-	TotalScore += Score;
+	TotalScore += (Score / 4.f);
 	TEXT_HeliScore->SetText(FText::FromString(FString::SanitizeFloat(Score)));
 	UpdateTotalScoreAndGrade();
 }
 
 void UTrainingResultUI::SetTankScore(const float Score)
 {
-	TotalScore += Score;
+	TotalScore += (Score / 4.f);
 	TEXT_TankScore->SetText(FText::FromString(FString::SanitizeFloat(Score)));
 	UpdateTotalScoreAndGrade();
 }
 
 void UTrainingResultUI::SetGasScore(const float Score)
 {
-	TotalScore += Score;
+	TotalScore += (Score / 4.f);
 	TEXT_GasScore->SetText(FText::FromString(FString::SanitizeFloat(Score)));
 	UpdateTotalScoreAndGrade();
 }
@@ -48,6 +48,7 @@ void UTrainingResultUI::UpdateTotalScoreAndGrade()
 	TEXT_TotalScore->SetText(FText::FromString(FString::SanitizeFloat(TotalScore)));
 	FString Grade;
 	FString Comment;
+	
 	if (TotalScore >= 90)
 	{
 		Grade = TEXT("특급");
