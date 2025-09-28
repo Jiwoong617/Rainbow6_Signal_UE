@@ -61,7 +61,8 @@ void AR6Character::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 
 void AR6Character::OnResponseReceived(const FSignalJudgeData& Message)
 {
-	PRINTLOG(TEXT("Scenario: %s, Score: %f"), *Message.Scenario, Message.Score);
+	PRINTLOG(TEXT("Scenario: %s, Score: %f, IsAnswer: %S"), *Message.Scenario, Message.Score
+		, (Message.IsAnswer ? "Answer" : "Not An answer"));
 
 	SignalJudgeData.Add(Message);
 	OnResponseDelegate.Broadcast();
@@ -72,7 +73,7 @@ void AR6Character::SendFrame(int32 FrameId, FString Frame)
 	FSignalFrameData FrameData;
 	FrameData.Type = TEXT("frame");
 	FrameData.FrameId = FrameId;
-	FrameData.Frame = Frame;
+	FrameData.jpegBase64 = Frame;
 		
 	NetManager->SendFrame(FrameData);
 }
@@ -96,7 +97,7 @@ void AR6Character::StartScenario(FString Signal, int32 AllFrame)
 	
 	Fps = AllFrame;
 	
-	float cnt = 5.f / static_cast<float>(Fps);
+	float cnt = 2.f / static_cast<float>(Fps);
 	GetWorldTimerManager().SetTimer(FrameTimer, [this]()
 	{
 		if (FrameCounter == Fps)
@@ -111,6 +112,8 @@ void AR6Character::StartScenario(FString Signal, int32 AllFrame)
 		SendFrame(FrameCounter, Frame);
 		FrameCounter++;
 	}, cnt, true);
+
+	//GetWorldTimerManager().SetTimer(EndTimer, this, &AR6Character::EndScenario, 4.f, false);
 }
 
 void AR6Character::OnGameEnd()

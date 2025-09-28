@@ -43,6 +43,9 @@ protected:
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite);
 	FTimerHandle FrameTimer;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FTimerHandle EndTimer;
+	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite);
 	int32 FrameCounter = 0;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite);

@@ -67,7 +67,7 @@ void UNetworkManager::SendFrame(const FSignalFrameData& Data)
 	JsonObject->SetStringField(TEXT("type"), Data.Type);
 	JsonObject->SetStringField(TEXT("sessionId"), SessionId);
 	JsonObject->SetNumberField(TEXT("frameId"), Data.FrameId);
-	JsonObject->SetStringField(TEXT("frame"), Data.Frame);
+	JsonObject->SetStringField(TEXT("jpegBase64"), Data.jpegBase64);
 
 	FString OutputString;
 	TSharedRef<TJsonWriter<>> Writer = TJsonWriterFactory<>::Create(&OutputString);

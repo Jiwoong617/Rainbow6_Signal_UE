@@ -46,7 +46,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 FrameId; // 현재 프레임 번호
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FString Frame; // Base64 이미지 정보
+	FString jpegBase64; // Base64 이미지 정보
 };
 
 //언리얼측에서 서버로 보낼 정보 - End
