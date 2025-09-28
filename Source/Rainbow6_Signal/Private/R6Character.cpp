@@ -38,6 +38,8 @@ void AR6Character::BeginPlay()
 	WebcamUI->AddToViewport();
 
 	ResultUI = CreateWidget<UTrainingResultUI>(GetWorld(), WBP_ResultUI);
+	ResultUI->AddToViewport();
+	ResultUI->Hide();
 
 	NetManager = GetWorld()->GetSubsystem<UNetworkManager>();
 	if (NetManager)
@@ -66,6 +68,15 @@ void AR6Character::OnResponseReceived(const FSignalJudgeData& Message)
 		, (Message.IsAnswer ? "Answer" : "Not An answer"));
 
 	SignalJudgeData.Add(Message);
+	if (Message.Scenario == TEXT("Line_Abreast_Formation"))
+		ResultUI->SetBombScore(Message.Score * 100);
+	if (Message.Scenario == TEXT("Freeze"))
+		ResultUI->SetBombScore(Message.Score * 100);
+	if (Message.Scenario == TEXT("Crouch_or_Go_Prone"))
+		ResultUI->SetBombScore(Message.Score * 100);
+	if (Message.Scenario == TEXT("Gas"))
+		ResultUI->SetGasScore(Message.Score * 100);
+	
 	OnResponseDelegate.Broadcast();
 }
 
@@ -129,6 +140,5 @@ void AR6Character::StartScenario(FString Signal, int32 AllFrame)
 void AR6Character::OnGameEnd()
 {
 	WebcamUI->RemoveFromParent();
-	ResultUI->AddToViewport();
-	//EndUI->SetResultText()
+	ResultUI->Show();
 }
