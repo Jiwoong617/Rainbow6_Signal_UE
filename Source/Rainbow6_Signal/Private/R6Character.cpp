@@ -73,8 +73,9 @@ void AR6Character::OnFrameResponseReceived(int32 FrameNum)
 {
 	if (FrameNum == Fps)
 	{
+		//TODO : 이거 혹시 프레임 늦게 가거나 처리가 늦다면 rate 늘릴 것
 		PRINTLOG(TEXT("%d"), FrameNum);
-		EndScenario();
+		GetWorldTimerManager().SetTimer(EndTimer, this, &AR6Character::EndScenario, 2.f, false);
 	}
 }
 

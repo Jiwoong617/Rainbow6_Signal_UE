@@ -133,7 +133,7 @@ void UNetworkManager::OnMessageReceived_Native(const FString& Message)
 			FString Type = JsonObject->GetStringField(TEXT("type"));
 			if (Type == TEXT("frame_ack"))
 			{
-				int32 frameNum = JsonObject->GetNumberField(TEXT("received"));
+				int32 frameNum = JsonObject->GetNumberField(TEXT("buffered"));
 				PRINTLOG(TEXT("Received : %d"), frameNum);
 				OnFrameResponseDelegate.Broadcast(frameNum);
 				return;
