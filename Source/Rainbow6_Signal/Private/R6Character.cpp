@@ -92,9 +92,11 @@ void AR6Character::StartScenario(FString Signal, int32 AllFrame)
 	StartData.Fps = AllFrame;
 	NetManager->SendScenarioStart(StartData);
 
+	PRINTLOG(TEXT("%s \n %d \n %s"), *StartData.Scenario, StartData.Fps, *StartData.Type);
+	
 	Fps = AllFrame;
 	
-	float cnt = 2.f / static_cast<float>(Fps);
+	float cnt = 5.f / static_cast<float>(Fps);
 	GetWorldTimerManager().SetTimer(FrameTimer, [this]()
 	{
 		if (FrameCounter == Fps)

@@ -5,7 +5,7 @@
 
 namespace NetworkConfig
 {
-	const FString BaseUrl = TEXT("ws://[222.109.13.123]:7777/ws/signal");
+	const FString BaseUrl = TEXT("wss://3e22125ffb05.ngrok-free.app/ws/scenario");
 	const int32 Port = 8000;
 
 	static FString GetURL()

@@ -101,7 +101,7 @@ FString UDataManager::EncodeFrameToBase64(UTextureRenderTarget2D* RenderTarget)
 	// 	UE_LOG(LogTemp, Error, TEXT("Failed to save webcam shot!"));
 	// }
 
-	return FBase64::Encode(CompressedPNG);
+	return FBase64::Encode(CompressedPNG, EBase64Mode::UrlSafe);
 }
 
 void UDataManager::SaveFile(UTextureRenderTarget2D* RenderTarget, FString FileName)
