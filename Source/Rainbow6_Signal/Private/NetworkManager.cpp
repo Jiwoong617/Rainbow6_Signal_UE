@@ -129,11 +129,20 @@ void UNetworkManager::OnMessageReceived_Native(const FString& Message)
 	if (FJsonSerializer::Deserialize(Reader, JsonObject) && JsonObject.IsValid())
 	{
 		if (JsonObject->HasField(TEXT("scenario")))
+		{
+			PRINTLOG(TEXT("GET Scenario"));
 			Data.Scenario = JsonObject->GetStringField(TEXT("scenario"));
+		}
 		if (JsonObject->HasField(TEXT("isAnswer")))
+		{
+			PRINTLOG(TEXT("GET IsAnswer"));
 			Data.IsAnswer = JsonObject->GetBoolField(TEXT("isAnswer"));
+		}
 		if (JsonObject->HasField(TEXT("score")))
+		{
+			PRINTLOG(TEXT("GET Score"));
 			Data.Score = JsonObject->GetNumberField(TEXT("score"));
+		}
 	}
 	
 	OnMessageReceived.Broadcast(Data);

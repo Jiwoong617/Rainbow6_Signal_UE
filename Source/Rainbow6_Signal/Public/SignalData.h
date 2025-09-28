@@ -5,7 +5,7 @@
 
 namespace NetworkConfig
 {
-	const FString BaseUrl = TEXT("ws://172.16.20.178:8000/ws/scenario");
+	const FString BaseUrl = TEXT("ws://[222.109.13.123]:7777/ws/signal");
 	const int32 Port = 8000;
 
 	static FString GetURL()
