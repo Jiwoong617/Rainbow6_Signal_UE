@@ -43,6 +43,7 @@ void AR6Character::BeginPlay()
 	if (NetManager)
 	{
 		NetManager->OnMessageReceived.AddDynamic(this, &AR6Character::OnResponseReceived);
+		NetManager->OnFrameResponseDelegate.AddDynamic(this, &AR6Character::OnFrameResponseReceived);
 		NetManager->Connect(NetworkConfig::GetURL());
 	}
 }
@@ -66,6 +67,15 @@ void AR6Character::OnResponseReceived(const FSignalJudgeData& Message)
 
 	SignalJudgeData.Add(Message);
 	OnResponseDelegate.Broadcast();
+}
+
+void AR6Character::OnFrameResponseReceived(int32 FrameNum)
+{
+	if (FrameNum == Fps)
+	{
+		PRINTLOG(TEXT("%d"), FrameNum);
+		EndScenario();
+	}
 }
 
 void AR6Character::SendFrame(int32 FrameId, FString Frame)
@@ -93,7 +103,7 @@ void AR6Character::StartScenario(FString Signal, int32 AllFrame)
 	StartData.Fps = AllFrame;
 	NetManager->SendScenarioStart(StartData);
 
-	PRINTLOG(TEXT("%s \n %d \n %s"), *StartData.Scenario, StartData.Fps, *StartData.Type);
+	//PRINTLOG(TEXT("%s \n %d \n %s"), *StartData.Scenario, StartData.Fps, *StartData.Type);
 	
 	Fps = AllFrame;
 	
@@ -103,7 +113,6 @@ void AR6Character::StartScenario(FString Signal, int32 AllFrame)
 		if (FrameCounter == Fps)
 		{
 			GetWorldTimerManager().ClearTimer(FrameTimer);
-			EndScenario();
 			return;
 		}
 

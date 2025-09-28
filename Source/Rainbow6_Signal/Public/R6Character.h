@@ -64,11 +64,14 @@ public:
 
 	UPROPERTY(BlueprintAssignable);
 	FOnResponse OnResponseDelegate;
+
 	
 protected:
 	//이게 서버에서 데이터 받았을 때 들어오는 콜백되는 함수
 	UFUNCTION()
 	void OnResponseReceived(const FSignalJudgeData& Message);
+	UFUNCTION()
+	void OnFrameResponseReceived(int32 FrameNum);
 
 	UFUNCTION(BlueprintCallable)
 	void SendFrame(	int32 FrameId,FString Frame);

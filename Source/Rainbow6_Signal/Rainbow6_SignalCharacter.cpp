@@ -134,7 +134,7 @@ void ARainbow6_SignalCharacter::StopMovementForDuration(float Duration)
         MovementSpeed = 0.0f;
 
         // 타이머 설정
-        GetWorld()->GetTimerManager().SetTimer(MovementStopTimerHandle, this, &ARainbow6_SignalCharacter::ResumeMovement, Duration, false);
+        //GetWorld()->GetTimerManager().SetTimer(MovementStopTimerHandle, this, &ARainbow6_SignalCharacter::ResumeMovement, Duration, false);
     }
 }
 

@@ -128,6 +128,28 @@ void UNetworkManager::OnMessageReceived_Native(const FString& Message)
 	TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(Message);
 	if (FJsonSerializer::Deserialize(Reader, JsonObject) && JsonObject.IsValid())
 	{
+		if (JsonObject->HasField(TEXT("type")))
+		{
+			FString Type = JsonObject->GetStringField(TEXT("type"));
+			if (Type == TEXT("frame_ack"))
+			{
+				int32 frameNum = JsonObject->GetNumberField(TEXT("received"));
+				PRINTLOG(TEXT("Received : %d"), frameNum);
+				OnFrameResponseDelegate.Broadcast(frameNum);
+				return;
+			}
+			if (Type == TEXT("ack"))
+			{
+				PRINTLOG(TEXT("Type is Ack"));
+				return;
+			}
+			if (Type == TEXT("error"))
+			{
+				PRINTLOG(TEXT("Type is error"));
+				return;
+			}
+		}
+		
 		if (JsonObject->HasField(TEXT("scenario")))
 		{
 			PRINTLOG(TEXT("GET Scenario"));

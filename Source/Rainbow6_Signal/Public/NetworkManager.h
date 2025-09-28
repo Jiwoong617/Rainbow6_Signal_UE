@@ -16,6 +16,8 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnWebSocketMessageReceived, const F
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnWebSocketConnectionError, const FString&, Error);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnWebSocketClosed, int32, StatusCode, const FString&, Reason, bool, bWasClean);
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnFrameResponse, int32, received);
+
 UCLASS()
 class RAINBOW6_SIGNAL_API UNetworkManager : public UWorldSubsystem
 {
@@ -59,4 +61,7 @@ public:
 	FOnWebSocketConnectionError OnConnectionError;
 	UPROPERTY(BlueprintAssignable, Category = "WebSocket")
 	FOnWebSocketClosed OnClosed;
+	
+	UPROPERTY(BlueprintAssignable, Category = "WebSocket")
+	FOnFrameResponse OnFrameResponseDelegate;
 };
