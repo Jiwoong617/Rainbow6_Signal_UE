@@ -66,10 +66,12 @@ public:
 	UCameraComponent* GetFirstPersonCameraComponent() const { return FirstPersonCameraComponent; }
 
 public:
+	UFUNCTION(BlueprintCallable)
 	// 지정된 시간 동안 캐릭터의 움직임을 멈춥니다.
 	void StopMovementForDuration(float Duration);
 
 private:
+	UFUNCTION()
 	// 캐릭터의 움직임을 재개합니다.
 	void ResumeMovement();
 

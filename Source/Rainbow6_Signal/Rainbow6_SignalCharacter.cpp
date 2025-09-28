@@ -55,27 +55,29 @@ void ARainbow6_SignalCharacter::BeginPlay()
 	Super::BeginPlay();
 
 	// SplineToFollow가 유효한지 확인하고 SplineComponent를 미리 찾아둠
-		if (SplineToFollow)
-		{
-			TargetSplineComponent = SplineToFollow->FindComponentByClass<USplineComponent>();
+	if (SplineToFollow)
+	{
+		TargetSplineComponent = SplineToFollow->FindComponentByClass<USplineComponent>();
 
-			// 아래 디버그 로그 추가
-			if (TargetSplineComponent)
-			{
-				// 성공 로그 (초록색)
-				UE_LOG(LogTemp, Warning, TEXT("Success: Spline Component was found on the assigned Actor."));
-			}
-			else
-			{
-				// 실패 로그 (빨간색)
-				UE_LOG(LogTemp, Error, TEXT("ERROR: Spline Component was NOT found on the assigned Actor! Check the BP_Spline Blueprint."));
-			}
+		// 아래 디버그 로그 추가
+		if (TargetSplineComponent)
+		{
+			// 성공 로그 (초록색)
+			UE_LOG(LogTemp, Warning, TEXT("Success: Spline Component was found on the assigned Actor."));
 		}
 		else
 		{
-			// SplineToFollow 자체가 할당 안된 경우 (빨간색)
-			UE_LOG(LogTemp, Error, TEXT("ERROR: The 'SplineToFollow' variable is not assigned in the editor."));
+			// 실패 로그 (빨간색)
+			UE_LOG(LogTemp, Error, TEXT("ERROR: Spline Component was NOT found on the assigned Actor! Check the BP_Spline Blueprint."));
 		}
+	}
+	else
+	{
+		// SplineToFollow 자체가 할당 안된 경우 (빨간색)
+		UE_LOG(LogTemp, Error, TEXT("ERROR: The 'SplineToFollow' variable is not assigned in the editor."));
+	}
+
+	OnResponseDelegate.AddDynamic(this, &ARainbow6_SignalCharacter::ResumeMovement);
 }
 
 void ARainbow6_SignalCharacter::Tick(float DeltaTime)
