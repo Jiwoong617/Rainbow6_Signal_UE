@@ -6,7 +6,7 @@
 #include "GameFramework/Character.h"
 #include "R6Character.generated.h"
 
-class UEndUI;
+class UTrainingResultUI;
 class AR6PlayerController;
 struct FSignalJudgeData;
 class UWebcamUI;
@@ -38,7 +38,7 @@ protected:
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<UWebcamUI> WBP_WebcamUI;
 	UPROPERTY(EditAnywhere)
-	TSubclassOf<UEndUI> WBP_EndUI;
+	TSubclassOf<UTrainingResultUI> WBP_ResultUI;
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite);
@@ -51,7 +51,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UWebcamUI* WebcamUI;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	UEndUI* EndUI;
+	UTrainingResultUI* ResultUI;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite);
 	UNetworkManager* NetManager;

@@ -4,10 +4,10 @@
 #include "R6Character.h"
 
 #include "DataManager.h"
-#include "EndUI.h"
 #include "NetworkManager.h"
 #include "Rainbow6_Signal.h"
 #include "SignalData.h"
+#include "TrainingResultUI.h"
 #include "WebcamUI.h"
 #include "Blueprint/UserWidget.h"
 
@@ -22,9 +22,9 @@ AR6Character::AR6Character()
 	if (wbpWebcam.Succeeded())
 		WBP_WebcamUI = wbpWebcam.Class;
 
-	ConstructorHelpers::FClassFinder<UEndUI> wbpEnd(TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/Blueprints/WBP/WBP_EndUI.WBP_EndUI_C'"));
-	if (wbpEnd.Succeeded())
-		WBP_EndUI = wbpEnd.Class;
+	ConstructorHelpers::FClassFinder<UTrainingResultUI> wbpResult(TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/UI/WBP_TrainingResultUI.WBP_TrainingResultUI_C'"));
+	if (wbpResult.Succeeded())
+		WBP_ResultUI = wbpResult.Class;
 
 	AutoPossessPlayer = EAutoReceiveInput::Player0;
 }
@@ -37,7 +37,7 @@ void AR6Character::BeginPlay()
 	WebcamUI = CreateWidget<UWebcamUI>(GetWorld(), WBP_WebcamUI);
 	WebcamUI->AddToViewport();
 
-	EndUI = CreateWidget<UEndUI>(GetWorld(), WBP_EndUI);
+	ResultUI = CreateWidget<UTrainingResultUI>(GetWorld(), WBP_ResultUI);
 
 	NetManager = GetWorld()->GetSubsystem<UNetworkManager>();
 	if (NetManager)
@@ -114,6 +114,6 @@ void AR6Character::StartScenario(FString Signal, int32 AllFrame)
 void AR6Character::OnGameEnd()
 {
 	WebcamUI->RemoveFromParent();
-	EndUI->AddToViewport();
+	ResultUI->AddToViewport();
 	//EndUI->SetResultText()
 }
