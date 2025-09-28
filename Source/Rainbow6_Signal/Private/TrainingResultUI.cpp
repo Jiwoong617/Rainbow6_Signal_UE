@@ -47,34 +47,34 @@ void UTrainingResultUI::UpdateTotalScoreAndGrade()
 {
 	TEXT_TotalScore->SetText(FText::FromString(FString::SanitizeFloat(TotalScore)));
 	FText Grade;
-	FString Comment;
+	FText Comment;
 	
 	if (TotalScore >= 90)
 	{
 		Grade = FText::FromString(TEXT("특급"));
-		Comment = TEXT("참 잘했어요!");
+		Comment = FText::FromString(TEXT("참 잘했어요!"));
 	}
 	else if (TotalScore >= 80)
 	{
 		Grade = FText::FromString(TEXT("1급"));
-		Comment = TEXT("최고를 목표로 나아갈 것.");
+		Comment = FText::FromString(TEXT("최고를 목표로 나아갈 것."));
 	}
 	else if (TotalScore >= 70)
 	{
 		Grade = FText::FromString(TEXT("2급"));
-		Comment = TEXT("더욱 정진할 수 있을 것.");
+		Comment = FText::FromString(TEXT("더욱 정진할 수 있을 것."));
 	}
 	else if (TotalScore >= 60)
 	{
 		Grade = FText::FromString(TEXT("3급"));
-		Comment = TEXT("포기하지 말 것.");
+		Comment = FText::FromString(TEXT("포기하지 말 것."));
 	}
 	else
 	{
 		Grade = FText::FromString(TEXT("실격"));
-		Comment = TEXT("");
+		Comment = FText::FromString(TEXT("..."));
 	}
 	
 	TEXT_TotalGrade->SetText(Grade);
-	TEXT_CommentFromCommander->SetText(FText::FromString(Comment));
+	TEXT_CommentFromCommander->SetText(Comment);
 }
