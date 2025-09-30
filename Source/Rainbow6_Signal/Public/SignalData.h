@@ -5,7 +5,7 @@
 
 namespace NetworkConfig
 {
-	const FString BaseUrl = TEXT("wss://64282c9e2ef4.ngrok-free.app/ws/scenario");
+	const FString BaseUrl = TEXT("wss://5d8ae1e985a3.ngrok-free.app/ws/scenario");
 	const int32 Port = 8000;
 
 	static FString GetURL()

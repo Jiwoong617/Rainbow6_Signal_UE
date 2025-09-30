@@ -25,6 +25,8 @@ class RAINBOW6_SIGNAL_API UNetworkManager : public UWorldSubsystem
 private:
 	UPROPERTY()
 	FString SessionId;
+	UPROPERTY()
+	int32 count = 0;
 	
 	TSharedPtr<IWebSocket> WebSocket;
 
