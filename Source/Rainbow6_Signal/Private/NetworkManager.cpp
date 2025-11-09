@@ -26,6 +26,7 @@ void UNetworkManager::Connect(const FString& Url)
 
 void UNetworkManager::SendScenarioStart(const FSignalStartData& Data)
 {
+	count = 0;
 	if (!WebSocket.IsValid() || !WebSocket->IsConnected())
 	{
 		UE_LOG(LogTemp, Error, TEXT("WebSocket not connected"));
@@ -133,9 +134,10 @@ void UNetworkManager::OnMessageReceived_Native(const FString& Message)
 			FString Type = JsonObject->GetStringField(TEXT("type"));
 			if (Type == TEXT("frame_ack"))
 			{
+				count++;
 				int32 frameNum = JsonObject->GetNumberField(TEXT("buffered"));
 				PRINTLOG(TEXT("Received : %d"), frameNum);
-				OnFrameResponseDelegate.Broadcast(frameNum);
+				OnFrameResponseDelegate.Broadcast(count);
 				return;
 			}
 			if (Type == TEXT("ack"))
